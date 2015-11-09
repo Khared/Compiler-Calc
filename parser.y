@@ -4,7 +4,7 @@
 #include "global.h"
 #include "util.h"
 //#include "util.c"
-#include "symtab.h"
+//#include "symtab.h"
 #include "symtab.c"
 
 int yylex(void);
@@ -15,8 +15,8 @@ char *saved_name;
 %}
 
 %union {
-struct token_t *token;
-struct node_t *node;
+	struct token_t *token;
+	struct node_t *node;
 }
 
 %token AND ATRIBUI ELSE END IGUAL GE MAIOR IF LE LPAREN MENOR THEN DO ;
@@ -220,5 +220,13 @@ factor : LPAREN expr RPAREN
 
 void yyerror(const char * s, ...) {
 	printf("Erro sintatico: %s\n", s);
-	exit(1);
+	return;
+}
+
+int main() {
+	if (yyparse())
+		fprintf(stderr, "Successful parsing.\n");
+	else
+		fprintf(stderr, "error found.\n");
+	return 0;
 }
