@@ -4,8 +4,7 @@
 #include "global.h"
 #include "util.h"
 //#include "util.c"
-//#include "symtab.h"
-#include "symtab.c"
+#include "symtab.h"
 
 int yylex(void);
 void yyerror(const char *, ...);
@@ -93,11 +92,13 @@ atrb_decl : ID
             }
             ATRIBUI expr
             {
+              Simbolo *teste = NULL;
               $$ = new_stmt_node(attrib_k);
               $$->child[0] = $4;
               $$->attr.name = saved_name;
               $$->lineno = lineno;
-              symtab_insert(stab, saved_name);
+              if (!(teste = getsimbolo(saved_name))
+              	setsimbolo(saved_name, (yylval.token)->value.val);
             }
             ;
 
@@ -199,12 +200,12 @@ factor : LPAREN expr RPAREN
        { $$ = $2; }
        | ID
          {
-           struct symtab_t *symbol = NULL;
+           Simbolo *teste = NULL;
            $$ = new_expr_node(id_k);
            $$->attr.name = copy_str ((yylval.token)->value.name);
            $$->lineno = yylval.token->lineno;
-           symbol = symtab_lookup(stab, (yylval.token)->value.name);
-           if ( symbol == NULL )
+           Simbolo = getsimbolo((yylval.token)->value.name);
+           if ( Simbolo == NULL )
            {
              fprintf(stderr,"Erro sintatico: Simbolo '%s' nao existe, linha %d.\n", (yylval.token)->value.name, yylval.token->lineno);
              exit(EXIT_FAILURE);
@@ -224,6 +225,7 @@ void yyerror(const char * s, ...) {
 }
 
 int main() {
+	inicializatabela();
 	if (yyparse())
 		fprintf(stderr, "Successful parsing.\n");
 	else
