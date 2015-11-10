@@ -1,28 +1,37 @@
-#ifndef _SYMTAB_H
-#define _SYMTAB_H
+/* Geração da Tabela de Simbolos */
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
-#define HASH_TABLE_SIZE 1117
-#define VAR_LOCATIONS 512
-
-struct locations {
-	int locations[VAR_LOCATIONS + 1];
+struct Simbolo{
+    char identificador[50]; /* nome do simbolo */
+    int val;          /* valor do simbolo  */
+    struct Simbolo *next;  /* ponteiro para o próximo  */
 };
 
-struct symtab_t {
-	char *id;
-	struct locations l;
-	struct symtab_t *next;
-};
+typedef struct Simbolo Simbolo;
 
+Simbolo *sym_table;
 
-unsigned int hash (char *id);
-struct symtab_t **symtab_new(void);
-int symtab_insert (struct symtab_t **tab, char *id);
-struct symtab_t *symtab_lookup (struct symtab_t **tab, char *id);
-int symtab_destroy (struct symtab_t **tab);
-void symtab_print (struct symtab_t **tab);
-
-
-#endif /* _SYMTAB_H */
-
+bool setsimbolo (char *sym_id, int sym_val, int *sym_mem){ /* Função para colocar uma variável na tabela */
+	Simbolo *temporario;
+	if(temporario = (Simbolo*)malloc(sizeof(Simbolo))){
+        strcpy (temporario->identificador, sym_id);
+        temporario->val = sym_val;
+        temporario->next = (struct Simbolo *) sym_table;
+        sym_table = temporario;
+        return true;}
+	else
+        return false;
+}
+Simbolo *getsimbolo (char *sym_id) { /* Busca de variável na tabela */
+    Simbolo *temporario;
+    for(temporario = sym_table; temporario != NULL; temporario = temporario->next)
+        if((strcmp(temporario->identificador,sym_id)) == 0)
+            return temporario;
+    return NULL;
+}
+void inicializatabela(){
+    sym_table = NULL;
+}
 
